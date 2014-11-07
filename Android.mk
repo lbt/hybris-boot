@@ -40,11 +40,15 @@ HYBRIS_R_ALWAYSDEBUG := 1
 HYBRIS_FIXUP_MOUNTS := $(LOCAL_PATH)/fixup-mountpoints
 
 
+ifdef TARGET_RECOVERY_FSTAB
+HYBRIS_FSTABS := $(TARGET_RECOVERY_FSTAB)
+else
 # Find any fstab files for required partition information.
 # in AOSP we could use TARGET_VENDOR
 # TARGET_VENDOR := $(shell echo $(PRODUCT_MANUFACTURER) | tr '[:upper:]' '[:lower:]')
 # but Cyanogenmod seems to use device/*/$(TARGET_DEVICE) in config.mk so we will too.
 HYBRIS_FSTABS := $(shell find device/*/$(TARGET_DEVICE) -name *fstab* | grep -v goldfish)
+endif
 
 # Get the unique /dev field(s) from the line(s) containing the fs mount point
 # Note the perl one-liner uses double-$ as per Makefile syntax
