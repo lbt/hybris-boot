@@ -5,7 +5,7 @@
 
 DEVICE=$1
 shift
-
+FIXUPDONE=1
 echo "Fixing mount-points for device $DEVICE"
 
 case "$DEVICE" in
@@ -102,14 +102,36 @@ case "$DEVICE" in
 
 ****************************************************************
 ****************************************************************
-ERROR: $DEVICE does not have mountpoint fixup data - see
-       SailfishOS HADK for details on how to fix this
+INFO : $DEVICE does not have mountpoint fixup data
+       If you are running systemd > 191-2 this should not be a
+       problem
+
+       If it *is* a problem see SailfishOS HADK for details on
+       how to fix it.
        Check: device/$VENDOR/$DEVICE/recovery.fstab
+
 ****************************************************************
 ****************************************************************
 
 EOF
-        exit 1
+	FIXUPDONE=0
+        exit 0
         ;;
 esac
 
+if [[ $FIXUPDONE == 1 ]]; then
+	cat <<EOF
+
+****************************************************************
+****************************************************************
+WARNING : Mountpoint fixup done; this is being deprecated.
+
+          If you are running systemd > 191-2 try removing fixup
+          data
+
+****************************************************************
+****************************************************************
+
+EOF
+
+fi
